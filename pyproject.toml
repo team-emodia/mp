@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "mp"
+version = "0.1.0"
+description = ""
+authors = ["minjeong <smjung1440@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+opencv-python = "4.9.0.80"
+mediapipe = "^0.10.21"
+numpy = "*"
+scikit-learn = "^1.7.2"
+fastapi = "^0.111.0"
+uvicorn = "^0.30.1"
+python-socketio = "^5.11.2"
+websockets = "^12.0"
+
+
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

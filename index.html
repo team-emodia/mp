@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Webcam Streaming</title>
+</head>
+<body>
+    <h1>Webcam Streaming</h1>
+    <video id="video" width="640" height="480" autoplay style="transform: scaleX(-1);"></video>
+    <canvas id="canvas" width="640" height="480" style="display:none;"></canvas>
+    <img id="processed-image" width="640" height="480">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+        const processedImage = document.getElementById('processed-image');
+
+        const socket = io();
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            });
+
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from server');
+        });
+
+        socket.on('processed_frame', (image) => {
+            processedImage.src = 'data:image/jpeg;base64,' + image;
+        });
+
+        setInterval(() => {
+            context.drawImage(video, 0, 0, 640, 480);
+            let data = canvas.toDataURL('image/jpeg', 0.5);
+            socket.emit('frame', data.split(',')[1]);
+        }, 100); // Send a frame every 100ms
+
+    </script>
+</body>
+</html>
